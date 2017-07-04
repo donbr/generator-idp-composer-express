@@ -1,0 +1,5 @@
+applications:
+  - name: <%= appName %>
+    memory: 512M
+    env:
+      API_PATH: http://<%= restServer %>:3000

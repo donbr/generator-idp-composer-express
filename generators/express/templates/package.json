@@ -1,0 +1,30 @@
+{
+  "name": "<%= appName %>",
+  "description":"<%= appDescription %>",
+  "version": "0.0.1",
+  "author": "<%= authorName %>",
+  "email": "<%= authorEmail %>",
+  "license": "<%= license %>",
+  "scripts": {
+<% if(apiServer == 'generate'){ %>
+    "app": "composer-rest-server -n <%= networkIdentifier %> -p <%= connectionProfileName %> -i <%= enrollmentId %> -s <%= enrollmentSecret %> -N <%= apiNamespace %> -P <%= apiPort %>",
+    "start": "concurrently \"npm app\" \"node ./bin/www\""
+<% }else{ %>
+    "start": "node ./bin/www"
+<% } %>
+  },
+  "private": true,
+  "dependencies": {
+    "body-parser": "~1.17.1",
+    "composer-client": "latest",
+    "composer-rest-server": "latest",
+    "concurrently": "^3.1.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.3",
+    "express": "~4.15.2",
+    "jade": "~1.11.0",
+    "morgan": "~1.8.1",
+    "serve-favicon": "~2.4.2",
+    "unirest": "0.5.1"
+  }
+}
