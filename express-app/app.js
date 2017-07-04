@@ -29,9 +29,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', require('./routes/index'));
 app.use('/people', require('./routes/people'));
 app.use('/properties', require('./routes/properties'));
-<% for(var x=0;x<assetList.length;x++) { %>
-app.use('/<%= assetList[x].name %>', require('./routes/<%= assetList[x].name %>'));
-<% } %>
+
+app.use('/LandTitle', require('./routes/LandTitle'));
+
+app.use('/SalesAgreement', require('./routes/SalesAgreement'));
+
 
 
 // catch 404 and forward to error handler

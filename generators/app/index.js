@@ -46,6 +46,10 @@ module.exports = generators.Base.extend({
                     value: 'businessnetwork'
                 },
                 {
+                    name: 'Node.js Express',
+                    value: 'express'
+                },
+                {
                     name: 'Model',
                     value: 'model'
                 }
@@ -66,16 +70,19 @@ module.exports = generators.Base.extend({
 
     configuring: function() {
         if(this.generatorType === 'CLI'){
-            console.log('You can run this generator using: \'yo hyperledger-composer:cli\'');
+            console.log('You can run this generator using: \'yo idp-composer-express:cli\'');
             this.composeWith(require.resolve('../cli'));
         } else if(this.generatorType === 'Angular'){
-            console.log('You can run this generator using: \'yo hyperledger-composer:angular\'');
+            console.log('You can run this generator using: \'yo idp-composer-express:angular\'');
             this.composeWith(require.resolve('../angular'));
         } else if (this.generatorType === 'businessnetwork') {
-            console.log('You can run this generator using: \'yo hyperledger-composer:businessnetwork\'');
+            console.log('You can run this generator using: \'yo idp-composer-express:businessnetwork\'');
             this.composeWith(require.resolve('../businessnetwork'));
+        } else if (this.generatorType === 'express') {
+            console.log('You can run this generator using: \'yo idp-composer-express:express\'');
+            this.composeWith(require.resolve('../express'));
         } else if (this.generatorType === 'model') {
-            console.log('You can run this generator using: \'yo hyperledger-composer:model\'');
+            console.log('You can run this generator using: \'yo idp-composer-express:model\'');
             this.composeWith(require.resolve('../model'));
         } else{
             console.log('Generator type not recognised');
