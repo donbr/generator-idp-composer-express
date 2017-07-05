@@ -410,7 +410,12 @@ module.exports = yeoman.Base.extend({
             modelManager = introspector.getModelManager();
             namespaceList = modelManager.getNamespaces();
 
-            // shell.mkdir('-p', destinationPath + '/src/assets/');
+            // we need models, routes and views directories
+            shell.mkdir('-p', destinationPath + '/models/');
+            shell.mkdir('-p', destinationPath + '/routes/');
+            shell.mkdir('-p', destinationPath + '/views/');
+
+            // there should only be one namespace if they're used at all
             namespaceList.forEach((namespace) => {
 
                 let modelFile = modelManager.getModelFile(namespace);
@@ -455,56 +460,51 @@ module.exports = yeoman.Base.extend({
                 });
             });
 
-            assetList.forEach((asset) => {
-                assetServiceNames.push(asset.name + 'Service');
-            });
-
-            assetList.forEach((asset) => {
-                assetComponentNames.push(asset.name + 'Component');
-            });
-
             let model = this._generateTemplateModel();
-            this.fs.copyTpl(this.templatePath('**/!(node_modules|typings|asset|Transaction)*'), this.destinationPath(), model);
+
+console.log('*** here');
+            this.fs.copyTpl(this.templatePath('*!(node_modules|typings|asset|Transaction)*'), this.destinationPath(), model);
             this.fs.move(this.destinationPath('_dot_cfignore'), this.destinationPath('.cfignore'));
             this.fs.move(this.destinationPath('_dot_gitignore'), this.destinationPath('.gitignore'));
+            console.log('*** but not here');
 
-            // for (let x = 0; x < assetList.length; x++) {
-            //     this.fs.copyTpl(
-            //         this.templatePath('src/app/asset/asset.component.ts'),
-            //         this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.ts'), {
-            //             currentAsset: assetList[x],
-            //             namespace: assetList[x].namespace,
-            //             assetIdentifier: assetList[x].identifier
-            //         }
-            //     );
-            //     this.fs.copyTpl(
-            //         this.templatePath('src/app/asset/asset.service.ts'),
-            //         this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.service.ts'), {
-            //             assetName: assetList[x].name,
-            //             namespace: assetList[x].namespace,
-            //             apiNamespace: apiNamespace
-            //         }
-            //     );
-            //     this.fs.copyTpl(
-            //         this.templatePath('src/app/asset/asset.component.spec.ts'),
-            //         this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.spec.ts'), {
-            //             assetName: assetList[x].name
-            //         }
-            //     );
-            //     this.fs.copyTpl(
-            //         this.templatePath('src/app/asset/asset.component.html'),
-            //         this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.html'), {
-            //             currentAsset: assetList[x]
-            //         }
-            //     );
-            //
-            //     this.fs.copyTpl(
-            //         this.templatePath('src/app/asset/asset.component.css'),
-            //         this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.css'), {
-            //             styling: '{}'
-            //         }
-            //     );
-            // }
+            for (let x = 0; x < assetList.length; x++) {
+                this.fs.copyTpl(
+                    this.templatePath('asset/model.js'),
+                    this.destinationPath('models/' + assetList[x].name + 'Model.js'), {
+                        currentAsset: assetList[x],
+                        namespace: assetList[x].namespace,
+                        assetIdentifier: assetList[x].identifier
+                    }
+                );
+                // this.fs.copyTpl(
+                //     this.templatePath('src/app/asset/asset.service.ts'),
+                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.service.ts'), {
+                //         assetName: assetList[x].name,
+                //         namespace: assetList[x].namespace,
+                //         apiNamespace: apiNamespace
+                //     }
+                // );
+                // this.fs.copyTpl(
+                //     this.templatePath('src/app/asset/asset.component.spec.ts'),
+                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.spec.ts'), {
+                //         assetName: assetList[x].name
+                //     }
+                // );
+                // this.fs.copyTpl(
+                //     this.templatePath('src/app/asset/asset.component.html'),
+                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.html'), {
+                //         currentAsset: assetList[x]
+                //     }
+                // );
+                //
+                // this.fs.copyTpl(
+                //     this.templatePath('src/app/asset/asset.component.css'),
+                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.css'), {
+                //         styling: '{}'
+                //     }
+                // );
+            }
 
             let visitor = new TypescriptVisitor();
             let parameters = {
@@ -544,8 +544,6 @@ module.exports = yeoman.Base.extend({
             license: license,
             businessNetworkIdentifier: businessNetworkIdentifier,
             assetList: assetList,
-            assetServiceNames: assetServiceNames,
-            assetComponentNames: assetComponentNames,
             transactionList: transactionList,
             networkIdentifier: networkIdentifier,
             connectionProfileName: connectionProfileName,
