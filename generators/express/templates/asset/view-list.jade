@@ -1,0 +1,19 @@
+extends layout
+
+block content
+  h1= title
+  br
+  table(class='table table-striped')
+    tr
+      <% for(var x=0;x<currentAsset.properties.length;x++) { %>th <%= currentAsset.properties[x].name %>
+      <% } %>
+      th 
+    each <%= currentAsset.name %>, index in <%= currentAsset.name %>List
+      tr
+        <% for(var x=0;x<currentAsset.properties.length;x++) { %>td #{<%= currentAsset.name %>List[index].<%= currentAsset.properties[x].name %>}
+        <% } %>
+        td
+          a(href="/<%= currentAsset.name %>/#{<%= currentAsset.name %>List[index].<%= assetIdentifier %>}" class="btn btn-default" style="margin: 2px;") View
+  br
+  a(href="/<%= currentAsset.name %>/new" class="btn btn-primary") Add New <%= currentAsset.name %>
+  a(href="/" class="btn btn-default" style="margin: 2px;") Back to Index

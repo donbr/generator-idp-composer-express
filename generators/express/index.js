@@ -410,16 +410,17 @@ module.exports = yeoman.Base.extend({
             modelManager = introspector.getModelManager();
             namespaceList = modelManager.getNamespaces();
 
-            // we need models, routes and views directories
-            shell.mkdir('-p', destinationPath + '/models/');
-            shell.mkdir('-p', destinationPath + '/routes/');
-            shell.mkdir('-p', destinationPath + '/views/');
-
             // there should only be one namespace if they're used at all
             namespaceList.forEach((namespace) => {
 
                 let modelFile = modelManager.getModelFile(namespace);
                 let assetDeclarations = modelFile.getAssetDeclarations();
+                // participants should be handled separately, but for now, treat them as assets
+                let participantDeclarations = modelFile.getParticipantDeclarations();
+                for (var i = 0; i < participantDeclarations.length; i++) {
+                  assetDeclarations.push(participantDeclarations[i]);
+                }
+
 
                 assetDeclarations.forEach((asset) => {
 
@@ -462,11 +463,28 @@ module.exports = yeoman.Base.extend({
 
             let model = this._generateTemplateModel();
 
-console.log('*** here');
-            this.fs.copyTpl(this.templatePath('*!(node_modules|typings|asset|Transaction)*'), this.destinationPath(), model);
-            this.fs.move(this.destinationPath('_dot_cfignore'), this.destinationPath('.cfignore'));
-            this.fs.move(this.destinationPath('_dot_gitignore'), this.destinationPath('.gitignore'));
-            console.log('*** but not here');
+            // set up our directories
+            shell.mkdir('-p', destinationPath + '/models/');
+            shell.mkdir('-p', destinationPath + '/routes/');
+            shell.mkdir('-p', destinationPath + '/views/');
+            shell.mkdir('-p', destinationPath + '/public/images');
+            shell.mkdir('-p', destinationPath + '/public/js');
+
+//            this.fs.copyTpl(this.templatePath('**/!(asset|transaction)*'), this.destinationPath(), model);
+            // this.fs.move(this.destinationPath('_dot_cfignore'), this.destinationPath('.cfignore'));
+            // this.fs.move(this.destinationPath('_dot_gitignore'), this.destinationPath('.gitignore'));
+            this.fs.copyTpl(this.templatePath('bin/www'), this.destinationPath('bin/www'), model);
+            this.fs.copyTpl(this.templatePath('routes/index.js'), this.destinationPath('routes/index.js'), model);
+            this.fs.copy(this.templatePath('public/css/style.css'), this.destinationPath('public/css/style.css'));
+            this.fs.copy(this.templatePath('views/error.jade'), this.destinationPath('views/error.jade'));
+            this.fs.copyTpl(this.templatePath('views/index.jade'), this.destinationPath('views/index.jade'), model);
+            this.fs.copy(this.templatePath('views/layout.jade'), this.destinationPath('views/layout.jade'));
+            this.fs.copy(this.templatePath('_dot_cfignore'), this.destinationPath('.cfignore'));
+            this.fs.copy(this.templatePath('_dot_gitignore'), this.destinationPath('.gitignore'));
+            this.fs.copyTpl(this.templatePath('app.js'), this.destinationPath('app.js'), model);
+            this.fs.copyTpl(this.templatePath('manifest.yml'), this.destinationPath('manifest.yml'), model);
+            this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), model);
+            this.fs.copyTpl(this.templatePath('README.md'), this.destinationPath('README.md'), model);
 
             for (let x = 0; x < assetList.length; x++) {
                 this.fs.copyTpl(
@@ -474,6 +492,34 @@ console.log('*** here');
                     this.destinationPath('models/' + assetList[x].name + 'Model.js'), {
                         currentAsset: assetList[x],
                         namespace: assetList[x].namespace,
+                        assetIdentifier: assetList[x].identifier
+                    }
+                );
+                this.fs.copyTpl(
+                    this.templatePath('asset/route.js'),
+                    this.destinationPath('routes/' + assetList[x].name + '.js'), {
+                        currentAsset: assetList[x],
+                        assetIdentifier: assetList[x].identifier
+                    }
+                );
+                this.fs.copyTpl(
+                    this.templatePath('asset/view-list.jade'),
+                    this.destinationPath('views/' + assetList[x].name + '-list.jade'), {
+                        currentAsset: assetList[x],
+                        assetIdentifier: assetList[x].identifier
+                    }
+                );
+                this.fs.copyTpl(
+                    this.templatePath('asset/view-detail.jade'),
+                    this.destinationPath('views/' + assetList[x].name + '-detail.jade'), {
+                        currentAsset: assetList[x],
+                        assetIdentifier: assetList[x].identifier
+                    }
+                );
+                this.fs.copyTpl(
+                    this.templatePath('asset/view-new.jade'),
+                    this.destinationPath('views/' + assetList[x].name + '-new.jade'), {
+                        currentAsset: assetList[x],
                         assetIdentifier: assetList[x].identifier
                     }
                 );

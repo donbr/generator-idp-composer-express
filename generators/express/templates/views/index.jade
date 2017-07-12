@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  p #{description}
+  br
+  <% for(var x=0;x<assetList.length;x++) { %>
+  a(href="/<%= assetList[x].name %>" class="btn btn-success") <%= assetList[x].name %>
+  br
+  br
+  <% } %>

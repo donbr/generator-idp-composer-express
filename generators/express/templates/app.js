@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // set up API location - on Bluemix this is set in the environment variables
-app.set('api path', process.env.API_PATH || 'http://localhost:3000');
+app.set('api path', process.env.API_PATH || '<%= apiIP %>:<%= apiPort %>');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

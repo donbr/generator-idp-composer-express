@@ -27,7 +27,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 // this section defines how requests are routed based on their URL
 // e.g. a URL beginning with /users is routed to the module at ./routes/users.js
 app.use('/', require('./routes/index'));
-app.use('/LandTitle', require('./routes/LandTitle'));app.use('/SalesAgreement', require('./routes/SalesAgreement'));
+app.use('/LandTitle', require('./routes/LandTitle'));
+app.use('/SalesAgreement', require('./routes/SalesAgreement'));
+app.use('/Person', require('./routes/Person'));
+
 
 
 // catch 404 and forward to error handler

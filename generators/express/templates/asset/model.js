@@ -26,14 +26,12 @@ exports.getById = function (id, apiPath, callback) {
 // create a new <%= currentAsset.name %> from a prototype
 // NB a prototype is a <%= currentAsset.name %> but without the class & id fields
 // rewrite the random ID generator with your own method if required
-exports.create = function (proto<%= currentAsset.name %>, apiPath, callback) {
-  const <%= currentAsset.name %> = {
-    "$class": "<%= namespace %>.<%= currentAsset.name %>",
-    "<%= assetIdentifier %>": "ID:" + Math.trunc(Math.random() * 10000),
-    <% for(var x=0;x<currentAsset.properties.length;x++) { %>
-      "<%= currentAsset.properties[x].name %>": <%= currentAsset.properties[x].name %>","
-    <% } %>
-  };
+exports.create = function (<%= currentAsset.name %>, apiPath, callback) {
+  // add the class and id to the <%= currentAsset.name %>
+  <%= currentAsset.name %>.$class = "<%= namespace %>.<%= currentAsset.name %>";
+  <%= currentAsset.name %>.<%= assetIdentifier %> = "ID:" + Math.trunc(Math.random() * 10000);
+
+  // call the 'POST' API
   unirest.post(apiPath + '/api/<%= currentAsset.name %>/')
     .headers({'Accept': 'application/json', 'Content-type': 'application/json'})
     .send(<%= currentAsset.name %>)

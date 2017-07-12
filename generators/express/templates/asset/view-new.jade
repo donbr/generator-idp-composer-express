@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  h1= title
+  p Enter details of the new <%= currentAsset.name %>
+  br
+  form(action="/<%= currentAsset.name %>/create" method="get" class="form-horizontal")
+  <% for(var x=0;x<currentAsset.properties.length;x++) {
+       if(currentAsset.properties[x].name.localeCompare(assetIdentifier)!=0) { %>
+    .form-group
+      label(for="<%= currentAsset.properties[x].name %>" class="col-sm-2 control-label") <%= currentAsset.properties[x].name %>
+      .col-sm-6
+        input(type="text" class="form-control" name="<%= currentAsset.properties[x].name %>")
+  <%   }
+     } %>
+    div(class="col-sm-6 col-sm-offset-2")
+      button(type="submit" class="btn btn-primary") Add <%= currentAsset.name %>
