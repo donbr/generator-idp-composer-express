@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1= title
+  p Enter details of the <%= currentAsset.name %> to update
+  br
+  form(action="/<%= currentAsset.name %>/update" method="get" class="form-horizontal")
+  <% for(var x=0;x<currentAsset.properties.length;x++) { %>
+    .form-group
+      label(for="<%= currentAsset.properties[x].name %>" class="col-sm-2 control-label") <%= currentAsset.properties[x].name %>
+      .col-sm-6
+      <% if(currentAsset.properties[x].name.localeCompare(assetIdentifier)!=0) { %>
+        input(type="text" class="form-control" name="<%= currentAsset.properties[x].name %>" value="#{<%= currentAsset.name %>.<%= currentAsset.properties[x].name %>}")
+        <% } else { %>
+        input(type="text" class="form-control" name="<%= currentAsset.properties[x].name %>" value="#{<%= currentAsset.name %>.<%= currentAsset.properties[x].name %>}" readonly)
+      <% } 
+     } %>
+    div(class="col-sm-6 col-sm-offset-2")
+      button(type="submit" class="btn btn-primary") Update <%= currentAsset.name %>
+      a(href="/<%= currentAsset.name %>" class="btn btn-default" style="margin: 2px;") Back to list

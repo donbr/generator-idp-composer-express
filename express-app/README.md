@@ -4,4 +4,4 @@ This project was generated with [Hyperledger Composer Express Generator](https:/
 
 ## Running the application
 
-Run `npm install` and `npm start` to start the application.  Unless you specify otherwise, the application server will listen on port 8080.  Navigate to `http://localhost:8080/`.
+Run `npm install` and `npm start` to start the application.  Unless you specify otherwise, the application server will listen on port 8000.  Navigate to `http://localhost:8000/`.

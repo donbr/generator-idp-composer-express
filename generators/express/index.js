@@ -455,7 +455,6 @@ module.exports = yeoman.Base.extend({
                             'properties': tempList,
                             'identifier': asset.getIdentifierFieldName()
                         });
-                        // shell.mkdir('-p', destinationPath + '/bin/' + asset.name);
 
                     }
                 });
@@ -470,9 +469,7 @@ module.exports = yeoman.Base.extend({
             shell.mkdir('-p', destinationPath + '/public/images');
             shell.mkdir('-p', destinationPath + '/public/js');
 
-//            this.fs.copyTpl(this.templatePath('**/!(asset|transaction)*'), this.destinationPath(), model);
-            // this.fs.move(this.destinationPath('_dot_cfignore'), this.destinationPath('.cfignore'));
-            // this.fs.move(this.destinationPath('_dot_gitignore'), this.destinationPath('.gitignore'));
+            // copy the files from the template
             this.fs.copyTpl(this.templatePath('bin/www'), this.destinationPath('bin/www'), model);
             this.fs.copyTpl(this.templatePath('routes/index.js'), this.destinationPath('routes/index.js'), model);
             this.fs.copy(this.templatePath('public/css/style.css'), this.destinationPath('public/css/style.css'));
@@ -486,6 +483,7 @@ module.exports = yeoman.Base.extend({
             this.fs.copyTpl(this.templatePath('package.json'), this.destinationPath('package.json'), model);
             this.fs.copyTpl(this.templatePath('README.md'), this.destinationPath('README.md'), model);
 
+            // create the files for each asset
             for (let x = 0; x < assetList.length; x++) {
                 this.fs.copyTpl(
                     this.templatePath('asset/model.js'),
@@ -523,45 +521,32 @@ module.exports = yeoman.Base.extend({
                         assetIdentifier: assetList[x].identifier
                     }
                 );
-                // this.fs.copyTpl(
-                //     this.templatePath('src/app/asset/asset.service.ts'),
-                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.service.ts'), {
-                //         assetName: assetList[x].name,
-                //         namespace: assetList[x].namespace,
-                //         apiNamespace: apiNamespace
-                //     }
-                // );
-                // this.fs.copyTpl(
-                //     this.templatePath('src/app/asset/asset.component.spec.ts'),
-                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.spec.ts'), {
-                //         assetName: assetList[x].name
-                //     }
-                // );
-                // this.fs.copyTpl(
-                //     this.templatePath('src/app/asset/asset.component.html'),
-                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.html'), {
-                //         currentAsset: assetList[x]
-                //     }
-                // );
-                //
-                // this.fs.copyTpl(
-                //     this.templatePath('src/app/asset/asset.component.css'),
-                //     this.destinationPath('src/app/' + assetList[x].name + '/' + assetList[x].name + '.component.css'), {
-                //         styling: '{}'
-                //     }
-                // );
+                this.fs.copyTpl(
+                    this.templatePath('asset/view-update.jade'),
+                    this.destinationPath('views/' + assetList[x].name + '-update.jade'), {
+                        currentAsset: assetList[x],
+                        assetIdentifier: assetList[x].identifier
+                    }
+                );
+                this.fs.copyTpl(
+                    this.templatePath('asset/view-delete.jade'),
+                    this.destinationPath('views/' + assetList[x].name + '-delete.jade'), {
+                        currentAsset: assetList[x],
+                        assetIdentifier: assetList[x].identifier
+                    }
+                );
             }
 
-            let visitor = new TypescriptVisitor();
-            let parameters = {
-                fileWriter: new FileWriter(this.destinationPath() + '/src/app')
-            };
-
-            modelManager.accept(visitor, parameters);
-
-            assetList = [];
-            assetComponentNames = [];
-            assetServiceNames = [];
+            // // let visitor = new TypescriptVisitor();
+            // // let parameters = {
+            // //     fileWriter: new FileWriter(this.destinationPath() + '/src/app')
+            // // };
+            //
+            // modelManager.accept(visitor, parameters);
+            //
+            // assetList = [];
+            // assetComponentNames = [];
+            // assetServiceNames = [];
 
             resolve();
         });

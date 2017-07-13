@@ -32,9 +32,38 @@ exports.create = function (<%= currentAsset.name %>, apiPath, callback) {
   <%= currentAsset.name %>.<%= assetIdentifier %> = "ID:" + Math.trunc(Math.random() * 10000);
 
   // call the 'POST' API
-  unirest.post(apiPath + '/api/<%= currentAsset.name %>/')
+  unirest.post(apiPath + '/api/<%= currentAsset.name %>')
     .headers({'Accept': 'application/json', 'Content-type': 'application/json'})
     .send(<%= currentAsset.name %>)
+    .end(function (response) {
+      console.log(response.body);
+      callback();
+    });
+
+}
+
+// update an existing <%= currentAsset.name %> with new data
+// NB you can't change the id field
+exports.update = function (<%= currentAsset.name %>, apiPath, callback) {
+  // add the class to the <%= currentAsset.name %>
+  <%= currentAsset.name %>.$class = "<%= namespace %>.<%= currentAsset.name %>";
+
+  // call the 'PUT' API
+  unirest.put(apiPath + '/api/<%= currentAsset.name %>/' + <%= currentAsset.name %>.<%= assetIdentifier %>)
+    .headers({'Accept': 'application/json', 'Content-type': 'application/json'})
+    .send(<%= currentAsset.name %>)
+    .end(function (response) {
+      console.log(response.body);
+      callback();
+    });
+
+}
+
+// delete a <%= currentAsset.name %>
+exports.delete = function (id, apiPath, callback) {
+  // call the 'DELETE' API
+  unirest.delete(apiPath + '/api/<%= currentAsset.name %>/' + id)
+    .headers({'Accept': 'application/json', 'Content-type': 'application/json'})
     .end(function (response) {
       console.log(response.body);
       callback();
