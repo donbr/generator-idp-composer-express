@@ -14,8 +14,8 @@ block content
         <% } %>
         td
           a(href="/<%= currentAsset.name %>/#{<%= currentAsset.name %>List[index].<%= assetIdentifier %>}" class="btn btn-success" style="margin: 2px;") View
-          a(href="/<%= currentAsset.name %>/edit/#{<%= currentAsset.name %>List[index].<%= assetIdentifier %>}" class="btn btn-warning" style="margin: 2px;") Update
-          a(href="/<%= currentAsset.name %>/del/#{<%= currentAsset.name %>List[index].<%= assetIdentifier %>}" class="btn btn-danger" style="margin: 2px;") Delete
+          a(href="/<%= currentAsset.name %>/update/#{<%= currentAsset.name %>List[index].<%= assetIdentifier %>}" class="btn btn-warning" style="margin: 2px;") Update
+          a(href="/<%= currentAsset.name %>/delete/#{<%= currentAsset.name %>List[index].<%= assetIdentifier %>}" class="btn btn-danger" style="margin: 2px;") Delete
   br
   a(href="/<%= currentAsset.name %>/new" class="btn btn-primary") Add New <%= currentAsset.name %>
   a(href="/" class="btn btn-default" style="margin: 2px;") Back to Index

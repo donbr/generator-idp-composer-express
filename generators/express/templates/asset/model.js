@@ -9,6 +9,12 @@ const unirest = require('unirest');
 exports.getAll = function (apiPath, callback) {
   unirest.get(apiPath + '/api/<%= currentAsset.name %>').end(function (response) {
     let <%= currentAsset.name %>List = response.body;
+    // sort by <%= assetIdentifier %>
+    <%= currentAsset.name %>List.sort(function (a,b) {
+      if(a.<%= assetIdentifier %> < b.<%= assetIdentifier %>) {return -1;}
+      if(a.<%= assetIdentifier %> > b.<%= assetIdentifier %>) {return 1;}
+      return 0;
+    });
     // do any enrichment here
     callback(<%= currentAsset.name %>List);
   });
@@ -62,9 +68,7 @@ exports.update = function (<%= currentAsset.name %>, apiPath, callback) {
 // delete a <%= currentAsset.name %>
 exports.delete = function (id, apiPath, callback) {
   // call the 'DELETE' API
-  unirest.delete(apiPath + '/api/<%= currentAsset.name %>/' + id)
-    .headers({'Accept': 'application/json', 'Content-type': 'application/json'})
-    .end(function (response) {
+  unirest.delete(apiPath + '/api/<%= currentAsset.name %>/' + id).end(function (response) {
       console.log(response.body);
       callback();
     });
