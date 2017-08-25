@@ -11,8 +11,7 @@ router.get('/', function(req, res, next) {
   <%= currentAsset.name %>Model.getAll(req.app.get('api path'), function (<%= currentAsset.name %>List) {
     res.render('<%= currentAsset.name %>-list',
                { title: '<%= currentAsset.name %> List',
-                 <%= currentAsset.name %>List: <%= currentAsset.name %>List,
-                 properties: <%= currentAsset.name %>List});
+                 <%= currentAsset.name %>List: <%= currentAsset.name %>List});
   });
 });
 
@@ -40,7 +39,7 @@ router.get('/create', function(req, res, next) {
   });
 });
 
-// handle the URL /<%= currentAsset.name %>/edit/1234 - this shows the page for updating data
+// handle the URL /<%= currentAsset.name %>/update/1234 - this shows the page for updating data
 router.get('/update/:id', function(req, res, next) {
   let <%= currentAsset.name %>;
   <%= currentAsset.name %>Model.getById(req.params.id, req.app.get('api path'), function (<%= currentAsset.name %>) {
@@ -51,7 +50,7 @@ router.get('/update/:id', function(req, res, next) {
   });
 });
 
-// handle the URL /<%= currentAsset.name %>/update/1234 - this handles the actual update
+// handle the URL /<%= currentAsset.name %>/update/x/1234 - this handles the actual update
 router.get('/update/x/:id', function(req, res, next) {
   // create the <%= currentAsset.name %> object - $class will be added in the model
   let <%= currentAsset.name %> = {
@@ -67,7 +66,7 @@ router.get('/update/x/:id', function(req, res, next) {
   });
 });
 
-// handle the URL /<%= currentAsset.name %>/del/1234 - this shows the confirmation page for deleting an asset
+// handle the URL /<%= currentAsset.name %>/delete/1234 - this shows the confirmation page for deleting an asset
 router.get('/delete/:id', function(req, res, next) {
     let <%= currentAsset.name %>;
     <%= currentAsset.name %>Model.getById(req.params.id, req.app.get('api path'), function (<%= currentAsset.name %>) {
@@ -78,7 +77,7 @@ router.get('/delete/:id', function(req, res, next) {
     });
 });
 
-// handle the URL /<%= currentAsset.name %>/delete/1234 - this handles the actual deletion
+// handle the URL /<%= currentAsset.name %>/delete/x/1234 - this handles the actual deletion
 router.get('/delete/x/:id', function(req, res, next) {
   // call the 'delete' method in the model, then show the list view
   <%= currentAsset.name %>Model.delete(req.params.id, req.app.get('api path'), function () {

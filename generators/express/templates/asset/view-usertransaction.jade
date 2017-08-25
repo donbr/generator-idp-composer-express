@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+  p Enter details of the transaction
+  br
+  form(action="/trx/<%= currentTransaction.name %>/x" method="get" class="form-horizontal")
+  <% for(var x=0;x<currentTransaction.properties.length;x++) { %>
+    .form-group
+      label(for="<%= currentTransaction.properties[x].name %>" class="col-sm-2 control-label") <%= currentTransaction.properties[x].name %>
+      .col-sm-6
+        input(type="text" class="form-control" name="<%= currentTransaction.properties[x].name %>")
+  <% } %>
+    div(class="col-sm-6 col-sm-offset-2")
+      button(type="submit" class="btn btn-primary") Submit Transaction
+      a(href="/" class="btn btn-default" style="margin: 2px;") Back to Index

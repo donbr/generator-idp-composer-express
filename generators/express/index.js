@@ -16,10 +16,12 @@ const bfs_fs = BrowserFS.BFSRequire('fs');
 let businessNetworkDefinition;
 let businessNetworkIdentifier;
 let modelManager;
+let queryManager;
 let assetList = [];
 let assetServiceNames = [];
 let assetComponentNames = [];
 let transactionList = [];
+let queryList = [];
 let namespaceList;
 let introspector;
 let assetProperties;
@@ -410,6 +412,8 @@ module.exports = yeoman.Base.extend({
             modelManager = introspector.getModelManager();
             namespaceList = modelManager.getNamespaces();
 
+            queryManager = businessNetworkDefinition.getQueryManager();
+
             // there should only be one namespace if they're used at all
             namespaceList.forEach((namespace) => {
 
@@ -458,6 +462,58 @@ module.exports = yeoman.Base.extend({
 
                     }
                 });
+
+                let transactionDeclarations = modelFile.getTransactionDeclarations();
+                transactionDeclarations.forEach((transaction) => {
+
+                  if (!transaction.isAbstract()) {
+
+                    let tempList = [];
+                    let transactionProperties = transaction.getOwnProperties();
+
+                    for (var i = 0; i < transactionProperties.length; i++) {
+                        if (transactionProperties[i].constructor.name === 'Field') {
+                            if (transactionProperties[i].isTypeEnum() || transactionProperties[i].isPrimitive() || !transactionProperties[i].isPrimitive()) {
+                                tempList.push({
+                                    'name': transactionProperties[i].getName(),
+                                    'type': transactionProperties[i].getType()
+                                });
+                            } else {
+                                console.log('Unknown property type: ' + transactionProperties[i]);
+                            }
+                        } else if (transactionProperties[i].constructor.name === 'RelationshipDeclaration') {
+                            tempList.push({
+                                'name': transactionProperties[i].getName(),
+                                'type': transactionProperties[i].getType()
+                            });
+                        } else {
+                            console.log('Unknown property constructor name: ' + transactionProperties[i] );
+                        }
+                    }
+
+                    transactionList.push({
+                        'name': transaction.name,
+                        'namespace': transaction.getModelFile().getNamespace(),
+                        'properties': tempList,
+                        'identifier': transaction.getIdentifierFieldName()
+                    });
+
+                    console.log(JSON.stringify(transactionList));
+
+                  }
+
+                })
+
+                let queries = queryManager.getQueries();
+                queries.forEach((query) => {
+                  queryList.push(query);
+                })
+                // for (var i = 0; i < queries.length; i++) {
+                //   console.log('Query name: ' + queries[i].getName());
+                //   console.log('Description: ' + queries[i].getDescription());
+                //   console.log('Select: ' + queries[i].getSelect().getText());
+                // }
+
             });
 
             let model = this._generateTemplateModel();
@@ -472,6 +528,13 @@ module.exports = yeoman.Base.extend({
             // copy the files from the template
             this.fs.copyTpl(this.templatePath('bin/www'), this.destinationPath('bin/www'), model);
             this.fs.copyTpl(this.templatePath('routes/index.js'), this.destinationPath('routes/index.js'), model);
+            this.fs.copyTpl(this.templatePath('models/_QueryModel.js'), this.destinationPath('models/_QueryModel.js'), model);
+            this.fs.copyTpl(this.templatePath('models/UserTransactionModel.js'), this.destinationPath('models/UserTransactionModel.js'), model);
+            this.fs.copyTpl(this.templatePath('routes/UserTransaction.js'), this.destinationPath('routes/UserTransaction.js'), model);
+            this.fs.copy(this.templatePath('models/TransactionModel.js'), this.destinationPath('models/TransactionModel.js'));
+            this.fs.copy(this.templatePath('routes/Transaction.js'), this.destinationPath('routes/Transaction.js'));
+            this.fs.copy(this.templatePath('views/Transaction-list.jade'), this.destinationPath('views/Transaction-list.jade'));
+            this.fs.copy(this.templatePath('views/Transaction-detail.jade'), this.destinationPath('views/Transaction-detail.jade'));
             this.fs.copy(this.templatePath('public/css/style.css'), this.destinationPath('public/css/style.css'));
             this.fs.copy(this.templatePath('views/error.jade'), this.destinationPath('views/error.jade'));
             this.fs.copyTpl(this.templatePath('views/index.jade'), this.destinationPath('views/index.jade'), model);
@@ -537,6 +600,18 @@ module.exports = yeoman.Base.extend({
                 );
             }
 
+            // create the files for each transaction
+            for (let x = 0; x < transactionList.length; x++) {
+              this.fs.copyTpl(
+                  this.templatePath('asset/view-usertransaction.jade'),
+                  this.destinationPath('views/' + transactionList[x].name + '.jade'), {
+                      currentTransaction: transactionList[x]
+                  }
+              );
+
+            }
+
+
             // // let visitor = new TypescriptVisitor();
             // // let parameters = {
             // //     fileWriter: new FileWriter(this.destinationPath() + '/src/app')
@@ -576,6 +651,7 @@ module.exports = yeoman.Base.extend({
             businessNetworkIdentifier: businessNetworkIdentifier,
             assetList: assetList,
             transactionList: transactionList,
+            queryList: queryList,
             networkIdentifier: networkIdentifier,
             connectionProfileName: connectionProfileName,
             enrollmentId: enrollmentId,

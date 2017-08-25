@@ -9,3 +9,11 @@ block content
   br
   br
   <% } %>
+  <% for(var x=0;x<transactionList.length;x++) { %>
+  a(href="/trx/<%= transactionList[x].name %>" class="btn btn-primary") <%= transactionList[x].name %>
+  br
+  br
+  <% } %>
+  a(href="/Transaction" class="btn btn-danger") Transactions
+  br
+  br

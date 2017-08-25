@@ -27,6 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // this section defines how requests are routed based on their URL
 // e.g. a URL beginning with /users is routed to the module at ./routes/users.js
 app.use('/', require('./routes/index'));
+app.use('/Transaction', require('./routes/Transaction'));
+app.use('/trx', require('./routes/UserTransaction'));
 <% for(var x=0;x<assetList.length;x++) { %>app.use('/<%= assetList[x].name %>', require('./routes/<%= assetList[x].name %>'));
 <% } %>
 

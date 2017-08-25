@@ -14,7 +14,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
 // set up API location - on Bluemix this is set in the environment variables
-app.set('api path', process.env.API_PATH || 'http://localhost:3000');
+app.set('api path', process.env.API_PATH || 'http://173.193.99.205:31090');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -27,6 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 // this section defines how requests are routed based on their URL
 // e.g. a URL beginning with /users is routed to the module at ./routes/users.js
 app.use('/', require('./routes/index'));
+app.use('/Transaction', require('./routes/Transaction'));
+app.use('/trx', require('./routes/UserTransaction'));
 app.use('/LandTitle', require('./routes/LandTitle'));
 app.use('/SalesAgreement', require('./routes/SalesAgreement'));
 app.use('/Person', require('./routes/Person'));
