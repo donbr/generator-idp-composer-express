@@ -215,6 +215,46 @@ Then create a link in the view.
     a(href="/Person/#{PropertyList[index].ownerId}") #{PropertyList[index].owner)
 ```
 
+## Support for enumerations and booleans
+
+Some fields are restricted to a few specific values, for example a Task may have 3 possible statuses: not started, in progress and complete. To enforce this in your user interface you can replace the standard text field with a drop-down which is pre-configured with the allowable values for a field.
+
+In the view file:
+```
+# views/Task-new.jade
+
+  .form-group
+    label(for="status" class="col-sm-2 control-label") status
+    .col-sm-6
+      select(class="form-control" name="status")
+        option Not started
+        option In progress
+        option Completed
+```
+
+You could also use radio buttons:
+```
+.form-group
+  label(for="status" class="col-sm-2 control-label") Not started
+  .col-sm-6
+    input(type="radio" name="status" value="Not started")
+.form-group
+  label(for="status" class="col-sm-2 control-label") In progress
+  .col-sm-6
+    input(type="radio" name="status" value="In progress")
+.form-group
+  label(for="status" class="col-sm-2 control-label") Completed
+  .col-sm-6
+    input(type="radio" name="status" value="Completed")
+```
+
+For boolean fields, you could use a checkbox:
+```
+.form-group
+  label(for="forSale" class="col-sm-2 control-label") for sale
+  .col-sm-6
+    input(type="checkbox" name="forSale")
+```
 
 ## User transactions
 
