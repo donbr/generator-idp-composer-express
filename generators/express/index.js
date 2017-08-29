@@ -510,22 +510,18 @@ module.exports = yeoman.Base.extend({
                 })
 
                 let queries = queryManager.getQueries();
-                queries.forEach((query) => {
-                  queryList.push(query);
-                })
-                // for (var i = 0; i < queries.length; i++) {
-                //   console.log('Query name: ' + queries[i].getName());
-                //   console.log('Description: ' + queries[i].getDescription());
-                //   console.log('Select: ' + queries[i].getSelect().getText());
-                // }
+                for (var i = 0; i < queries.length; i++) {
+                  queryList.push({
+                    'name': queries[i].getName(),
+                    'description': queries[i].getDescription(),
+                    // ensure that new lines in the SELECT statement begin with comment markers
+                    'select': queries[i].getSelect().getText().replace(/\n/g, "\n//")
+                  });
+                }
 
               } // if not the system namespace
 
             }); // end of namespace loop
-
-            console.log("Assets");
-            console.log("------");
-            console.log(JSON.stringify(assetList));
 
             let model = this._generateTemplateModel();
 
