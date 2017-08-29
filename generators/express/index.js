@@ -416,11 +416,12 @@ module.exports = yeoman.Base.extend({
 
             // there should only be one namespace if they're used at all
             namespaceList.forEach((namespace) => {
-console.log("Namespace: " + namespace);
+
               if (!(namespace === "org.hyperledger.composer.system")) {
-console.log("executing");
+
                 let modelFile = modelManager.getModelFile(namespace);
                 let assetDeclarations = modelFile.getAssetDeclarations();
+
                 // participants should be handled separately, but for now, treat them as assets
                 let participantDeclarations = modelFile.getParticipantDeclarations();
                 for (var i = 0; i < participantDeclarations.length; i++) {
@@ -440,7 +441,8 @@ console.log("executing");
                                 if (property.isTypeEnum() || property.isPrimitive() || !property.isPrimitive()) {
                                     tempList.push({
                                         'name': property.getName(),
-                                        'type': property.getType()
+                                        'type': property.getType(),
+                                        'relation': false
                                     });
                                 } else {
                                     console.log('Unknown property type: ' + property);
@@ -448,7 +450,8 @@ console.log("executing");
                             } else if (property.constructor.name === 'RelationshipDeclaration') {
                                 tempList.push({
                                     'name': property.getName(),
-                                    'type': property.getType()
+                                    'type': property.getType(),
+                                    'relation': true
                                 });
                             } else {
                                 console.log('Unknown property constructor name: ' + property );
@@ -478,7 +481,8 @@ console.log("executing");
                             if (transactionProperties[i].isTypeEnum() || transactionProperties[i].isPrimitive() || !transactionProperties[i].isPrimitive()) {
                                 tempList.push({
                                     'name': transactionProperties[i].getName(),
-                                    'type': transactionProperties[i].getType()
+                                    'type': transactionProperties[i].getType(),
+                                    'relation': false
                                 });
                             } else {
                                 console.log('Unknown property type: ' + transactionProperties[i]);
@@ -486,7 +490,8 @@ console.log("executing");
                         } else if (transactionProperties[i].constructor.name === 'RelationshipDeclaration') {
                             tempList.push({
                                 'name': transactionProperties[i].getName(),
-                                'type': transactionProperties[i].getType()
+                                'type': transactionProperties[i].getType(),
+                                'relation': true
                             });
                         } else {
                             console.log('Unknown property constructor name: ' + transactionProperties[i] );
@@ -517,6 +522,10 @@ console.log("executing");
               } // if not the system namespace
 
             }); // end of namespace loop
+
+            console.log("Assets");
+            console.log("------");
+            console.log(JSON.stringify(assetList));
 
             let model = this._generateTemplateModel();
 

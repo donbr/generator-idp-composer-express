@@ -7,13 +7,16 @@ const unirest = require('unirest');
 
 <% for(var x=0;x<transactionList.length;x++) { %>
 exports.<%=transactionList[x].name%> = function (trx, apiPath, callback) {
-  // input variables can be short (e.g. ID:1234) or fully qualified
+  // input variables for relations can be short (e.g. ID:1234) or fully qualified
   // if short, expand them here
-  <% var propertyList = transactionList[x].properties; for(var p=0;p<propertyList.length;p++) { %>
+  <% var propertyList = transactionList[x].properties; for(var p=0;p<propertyList.length;p++) { if (propertyList[p].relation) { %>
   if (!trx.<%=propertyList[p].name%>.includes("#")) {
     trx.<%=propertyList[p].name%> = "resource:<%=transactionList[x].namespace%>.<%=propertyList[p].type%>#" + trx.<%=propertyList[p].name%>;
   }
-  <% } %>
+  <% } } %>
+
+  // add the class and timestamp to the transaction
+  // the transaction ID is assigned by the system
   trx.$class = "<%=transactionList[x].namespace%>.<%=transactionList[x].name%>";
   trx.timestamp = new Date().toISOString();
 
