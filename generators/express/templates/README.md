@@ -14,6 +14,7 @@ Run `npm install` and `npm start` to start the application.  Unless you specify 
 - a sample model file for complex queries, which must be modified to suit your actual queries
 - view files: for listing, adding new, updating existing and deleting Assets and Participants
 - route, model and view files for viewing system transactions
+- route, model and view files for executing user transactions
 - a _package.json_ file for building the app
 - _manifest.yml_ and _.cfignore_ files for deploying the app to Cloud Foundry
 

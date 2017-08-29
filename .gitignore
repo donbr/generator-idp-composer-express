@@ -1,3 +1,4 @@
 node_modules
 express-app
 logs
+npm-debug.log
