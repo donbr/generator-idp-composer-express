@@ -1,6 +1,6 @@
 {
   "name": "generator-idp-composer-express",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Generates projects from Hyperledger Composer business network definitions",
   "engines": {
     "node": ">=6",
