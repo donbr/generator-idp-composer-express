@@ -498,8 +498,6 @@ module.exports = yeoman.Base.extend({
                         'identifier': transaction.getIdentifierFieldName()
                     });
 
-                    console.log(JSON.stringify(transactionList));
-
                   }
 
                 })
