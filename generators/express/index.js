@@ -417,6 +417,8 @@ module.exports = yeoman.Base.extend({
             // there should only be one namespace if they're used at all
             namespaceList.forEach((namespace) => {
 
+              if (!namespace === "org.hyperledger.composer.system") {
+
                 let modelFile = modelManager.getModelFile(namespace);
                 let assetDeclarations = modelFile.getAssetDeclarations();
                 // participants should be handled separately, but for now, treat them as assets
@@ -512,7 +514,9 @@ module.exports = yeoman.Base.extend({
                 //   console.log('Select: ' + queries[i].getSelect().getText());
                 // }
 
-            });
+              } // if not the system namespace
+
+            }); // end of namespace loop
 
             let model = this._generateTemplateModel();
 
