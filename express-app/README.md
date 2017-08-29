@@ -14,6 +14,7 @@ Run `npm install` and `npm start` to start the application.  Unless you specify 
 - a sample model file for complex queries, which must be modified to suit your actual queries
 - view files: for listing, adding new, updating existing and deleting Assets and Participants
 - route, model and view files for viewing system transactions
+- route, model and view files for executing user transactions
 - a _package.json_ file for building the app
 - _manifest.yml_ and _.cfignore_ files for deploying the app to Cloud Foundry
 
@@ -192,6 +193,69 @@ router.get('/create', function(req, res, next) {
 In here we prefix the ID coming from the hidden drop-down with the namespace and class information required by the business network. This is then passed back to the model to add to the business network.
 
 Again, remember that this will all be overwritten if you run the generator tool again, so consider changing file names to protect your customisation work.
+
+## Linking from one view to another
+
+Where you have a relationship you can provide a link to go directly to a related asset.  For example, in a list of Property assets, the owner field could link to the details page for that Person.
+
+Create a new variable in the Property object and fill that with the ID of the owner (by default, you get the fully qualified name, you need to split off just the _ID:xxxx_ part).  
+```js
+// models/PropertyModel.js
+
+// do this is the enrichment section of the getAll function
+for (let x = 0; x < PropertyList.length; x++) {
+  PropertyList[x].ownerId = PropertyList[x].owner.split("#").pop();
+}
+```
+
+Then create a link in the view.
+```
+# views/Property-list.jade
+
+  td
+    a(href="/Person/#{PropertyList[index].ownerId}") #{PropertyList[index].owner)
+```
+
+## Support for enumerations and booleans
+
+Some fields are restricted to a few specific values, for example a Task may have 3 possible statuses: not started, in progress and complete. To enforce this in your user interface you can replace the standard text field with a drop-down which is pre-configured with the allowable values for a field.
+
+In the view file:
+```
+# views/Task-new.jade
+
+  .form-group
+    label(for="status" class="col-sm-2 control-label") status
+    .col-sm-6
+      select(class="form-control" name="status")
+        option Not started
+        option In progress
+        option Completed
+```
+
+You could also use radio buttons:
+```
+.form-group
+  label(for="status" class="col-sm-2 control-label") Not started
+  .col-sm-6
+    input(type="radio" name="status" value="Not started")
+.form-group
+  label(for="status" class="col-sm-2 control-label") In progress
+  .col-sm-6
+    input(type="radio" name="status" value="In progress")
+.form-group
+  label(for="status" class="col-sm-2 control-label") Completed
+  .col-sm-6
+    input(type="radio" name="status" value="Completed")
+```
+
+For boolean fields, you could use a checkbox:
+```
+.form-group
+  label(for="forSale" class="col-sm-2 control-label") for sale
+  .col-sm-6
+    input(type="checkbox" name="forSale")
+```
 
 ## User transactions
 

@@ -2,4 +2,4 @@ applications:
   - name: express-app
     memory: 512M
     env:
-      API_PATH: http://173.193.99.205:31090
+      API_PATH: http://localhost:3000
