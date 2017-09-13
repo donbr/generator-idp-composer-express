@@ -102,7 +102,9 @@ exports.getAll = function (apiPath, callback) {
         let owner = personList.find(function (person) {
           return ('resource:' + person.$class + '#' + person.personId == propertyList[x].owner)
         });
-        propertyList[x].ownerName = owner.firstName + ' ' + owner.lastName;
+        if (owner != null) {
+          propertyList[x].ownerName = owner.firstName + ' ' + owner.lastName;
+        }
       }
 
       callback(propertyList);
@@ -123,7 +125,9 @@ exports.getbyId = function (id, apiPath, callback) {
       let owner = personList.find(function (person) {
         return ('resource:' + person.$class + '#' + person.personId == property.owner)
       });
-      property.ownerName = owner.firstName + ' ' + owner.lastName;
+      if (owner != null) {
+        property.ownerName = owner.firstName + ' ' + owner.lastName;
+      }
 
       callback(property);
     });
